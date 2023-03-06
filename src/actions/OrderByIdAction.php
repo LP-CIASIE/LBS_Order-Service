@@ -6,7 +6,6 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 use lbs\order\services\OrderServices;
-use lbs\order\services\ItemServices;
 
 use lbs\order\errors\exceptions\RessourceNotFoundException;
 use Slim\Exception\HttpNotFoundException;
@@ -23,7 +22,12 @@ final class OrderByIdAction
     $query = $rq->getQueryParams();
     $os = new OrderServices();
     try {
-      $order = $os->getOrderById($args['id']);
+
+      if (isset($query['embed'])) {
+        $order = $os->getOrderById($args['id'], $query['embed']);
+      } else {
+        $order = $os->getOrderById($args['id']);
+      }
     } catch (RessourceNotFoundException $e) {
       throw new HttpNotFoundException($rq, $e->getMessage());
     }
