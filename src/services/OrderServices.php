@@ -29,7 +29,11 @@ final class OrderServices
         'created_at as order_date',
         'livraison as delivery_date',
         'montant as total_amount'
-      ])->findOrFail($id);
+      ])->where('id', '=', $id);
+
+      $order = $order->with('items');
+
+      $order = $order->findOrFail();
     } catch (ModelNotFoundException $e) {
       throw new RessourceNotFoundException("Ressource non trouvée.");
     }

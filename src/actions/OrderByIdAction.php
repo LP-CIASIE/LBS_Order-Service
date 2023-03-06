@@ -6,6 +6,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 use lbs\order\services\OrderServices;
+use lbs\order\services\ItemServices;
 
 use lbs\order\errors\exceptions\RessourceNotFoundException;
 use Slim\Exception\HttpNotFoundException;
@@ -19,6 +20,7 @@ final class OrderByIdAction
     Response $rs,
     array $args
   ): Response {
+    $query = $rq->getQueryParams();
     $os = new OrderServices();
     try {
       $order = $os->getOrderById($args['id']);
