@@ -32,8 +32,11 @@ $errorMiddleware->getDefaultErrorHandler()->registerErrorRenderer('application/j
  */
 $app->get('/', lbs\order\actions\HomeAction::class);
 
-$app->get('/orders', lbs\order\actions\OrdersAction::class);
-$app->get('/order/{id}', lbs\order\actions\OrderByIdAction::class);
+$app->get('/orders[/]', lbs\order\actions\OrdersAction::class);
+$app->get('/orders/{id}[/]', lbs\order\actions\OrderByIdAction::class);
+
+$app->put('/orders/{id}[/]', lbs\order\actions\UpdateOrderAction::class);
+
 
 
 $app->run();
