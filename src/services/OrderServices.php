@@ -9,6 +9,7 @@ use lbs\order\errors\exceptions\RessourceNotFoundException;
 
 final class OrderServices
 {
+
   public function getOrders(): array
   {
     return models\Commande::select([
@@ -35,5 +36,13 @@ final class OrderServices
     }
 
     return $order->toArray();
+  }
+
+  public function getItemsOrder($id)
+  {
+    try {
+    } catch (ModelNotFoundException $e) {
+      throw new RessourceNotFoundException("Ressource non trouvée.");
+    }
   }
 }
