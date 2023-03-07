@@ -2,6 +2,7 @@
 
 namespace lbs\order\actions;
 
+use lbs\order\errors\exceptions\BodyMissingException;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -16,12 +17,18 @@ final class UpdateOrderAction
 {
   public function __invoke(Request $rq, Response $rs, array $args): Response
   {
+    $body = $rq->getParsedBody();
+
+    if (!isset($body)) {
+      throw new BodyMissingException();
+    }
+
     $os = new OrderServices();
+
 
     $data = [
       'type' => 'resource',
-      'order' => 'TODO',
-      'test' => 'test'
+      'order' => 'TODO'
     ];
 
     return FormatterAPI::formatResponse($rq, $rs, $data);
