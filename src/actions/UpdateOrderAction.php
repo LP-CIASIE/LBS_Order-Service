@@ -20,7 +20,8 @@ final class UpdateOrderAction
 
     $data = [
       'type' => 'resource',
-      'order' => 'TODO'
+      'order' => 'TODO',
+      'test' => 'test'
     ];
 
     return FormatterAPI::formatResponse($rq, $rs, $data);
