@@ -33,8 +33,6 @@ final class OrderByIdAction
       throw new HttpNotFoundException($rq, $e->getMessage());
     }
 
-    $rs->getBody()->write("orders, {$args['id']}");
-
     $routeParser = RouteContext::fromRequest($rq)->getRouteParser();
 
     $data = [
