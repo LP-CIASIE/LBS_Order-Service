@@ -18,6 +18,6 @@ class Commande extends Model
 
   public function items()
   {
-    return $this->hasMany(Item::class, 'commande_id', 'id');
+    return $this->hasMany(Item::class, 'command_id', 'id');
   }
 }

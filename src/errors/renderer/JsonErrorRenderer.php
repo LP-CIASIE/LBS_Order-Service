@@ -3,16 +3,16 @@
 namespace lbs\order\errors\renderer;
 
 use Slim\Exception\HttpException;
+use Throwable;
 
 class JsonErrorRenderer extends \Slim\Error\Renderers\JsonErrorRenderer
 {
-  public function __invoke(HttpException $exception, bool $displayErrorDetails): string
+  public function __invoke(Throwable $exception, bool $displayErrorDetails): string
   {
     $data = [
       'type' => 'error',
       'error' => $exception->getCode(),
       'message' => $exception->getMessage(),
-      'description' => $exception->getDescription()
     ];
     if ($displayErrorDetails) $data['details'] = [
       'file' => $exception->getFile(),
