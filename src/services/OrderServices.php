@@ -10,14 +10,19 @@ use lbs\order\errors\exceptions\RessourceNotFoundException;
 final class OrderServices
 {
 
-  public function getOrders(): array
+  public function getOrders(int $page = 0, int $sizePage = 10): array
   {
     return models\Commande::select([
       'id',
       'mail as client_mail',
       'created_at as order_date',
       'montant as total_amount'
-    ])->get()->toArray();
+    ])->offset($page * $sizePage)->limit($sizePage)->get()->toArray();
+  }
+
+  public function getCountOrders(): int
+  {
+    return models\Commande::count();
   }
 
   public function getOrderById($id, bool | string $embed = false): ?array
