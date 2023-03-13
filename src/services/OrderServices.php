@@ -91,4 +91,15 @@ final class OrderServices
 
     return $order->toArray();
   }
+
+  public function getItemsOrder($id)
+  {
+    try {
+      $order = models\Commande::findOrFail($id);
+      $items = $order->items()->get();
+    } catch (ModelNotFoundException $e) {
+      throw new RessourceNotFoundException("Ressource non trouvée : " . $e);
+    }
+    return $items->toArray();
+  }
 }
