@@ -56,7 +56,7 @@ final class OrderServices
   public function getItemsOrder($id)
   {
     try {
-      $order = models\Commande::select()->findOrFail($id);
+      $order = models\Commande::findOrFail($id);
       $items = $order->items()->get();
     } catch (ModelNotFoundException $e) {
       throw new RessourceNotFoundException("Ressource non trouvée : " . $e);
