@@ -10,6 +10,8 @@ use lbs\order\services\OrderServices;
 use lbs\order\errors\exceptions\RessourceNotFoundException;
 use Slim\Exception\HttpNotFoundException;
 
+use Slim\Routing\RouteContext;
+
 use \lbs\order\services\utils\FormatterAPI;
 
 final class OrderByIdAction
@@ -31,9 +33,22 @@ final class OrderByIdAction
     } catch (RessourceNotFoundException $e) {
       throw new HttpNotFoundException($rq, $e->getMessage());
     }
+
+    $rs->getBody()->write("orders, {$args['id']}");
+
+    $routeParser = RouteContext::fromRequest($rq)->getRouteParser();
+
     $data = [
       'type' => 'resource',
-      'order' => $order
+      'order' => $order,
+      'links' => [
+        'items' => [
+          'href' => $routeParser->urlFor('ordersItems', ['id' => $args['id']])
+        ],
+        'self' => [
+          'href' => $routeParser->urlFor('ordersById', ['id' => $args['id']] ,)
+        ],
+      ] 
     ];
 
     return FormatterAPI::formatResponse($rq, $rs, $data);
