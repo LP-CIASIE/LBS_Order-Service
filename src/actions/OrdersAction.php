@@ -18,6 +18,7 @@ final class OrdersAction
     Response $rs
   ): Response {
     $query = $rq->getQueryParams();
+    $query = $rq->getQueryParams();
     $os = new OrderServices();
 
     $page = 0;
