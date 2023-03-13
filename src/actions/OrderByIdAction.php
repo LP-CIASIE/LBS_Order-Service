@@ -5,11 +5,10 @@ namespace lbs\order\actions;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-use lbs\order\services\OrderServices;
-
 use lbs\order\errors\exceptions\RessourceNotFoundException;
 use Slim\Exception\HttpNotFoundException;
 
+use lbs\order\services\OrderServices;
 use Slim\Routing\RouteContext;
 
 use \lbs\order\services\utils\FormatterAPI;
@@ -44,9 +43,9 @@ final class OrderByIdAction
           'href' => $routeParser->urlFor('ordersItems', ['id' => $args['id']])
         ],
         'self' => [
-          'href' => $routeParser->urlFor('ordersById', ['id' => $args['id']] ,)
+          'href' => $routeParser->urlFor('ordersById', ['id' => $args['id']],)
         ],
-      ] 
+      ]
     ];
 
     return FormatterAPI::formatResponse($rq, $rs, $data);
