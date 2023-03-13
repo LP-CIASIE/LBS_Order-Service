@@ -43,10 +43,10 @@ final class OrderByIdAction
       'order' => $order,
       'links' => [
         'items' => [
-          'href' => $routeParser->urlFor('orders', ['id' => $args['id']]) . 'items/'
+          'href' => $routeParser->urlFor('ordersItems', ['id' => $args['id']])
         ],
         'self' => [
-          'href' => $routeParser->urlFor('orders', ['id' => $args['id']] ,)
+          'href' => $routeParser->urlFor('ordersById', ['id' => $args['id']] ,)
         ],
       ] 
     ];
