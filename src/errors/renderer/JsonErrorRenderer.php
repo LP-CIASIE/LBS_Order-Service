@@ -1,7 +1,6 @@
 <?php
 
 namespace lbs\order\errors\renderer;
-
 use Slim\Exception\HttpException;
 use Throwable;
 
@@ -14,6 +13,7 @@ class JsonErrorRenderer extends \Slim\Error\Renderers\JsonErrorRenderer
       'error' => $exception->getCode(),
       'message' => $exception->getMessage(),
     ];
+
     if ($displayErrorDetails) $data['details'] = [
       'file' => $exception->getFile(),
       'line' => $exception->getLine(),

@@ -12,6 +12,7 @@ use Slim\Exception\HttpNotFoundException;
 
 use \lbs\order\services\utils\FormatterAPI;
 
+
 use Slim\Routing\RouteContext;
 
 final class OrderItemsAction
@@ -22,7 +23,9 @@ final class OrderItemsAction
     array $args
   ): Response {
     $os = new OrderServices();
+
     $routeParser = RouteContext::fromRequest($rq)->getRouteParser();
+
     try {
       $items = $os->getItemsOrder($args['id']);
     } catch (RessourceNotFoundException $e) {
