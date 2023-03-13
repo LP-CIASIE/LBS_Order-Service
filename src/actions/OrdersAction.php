@@ -45,31 +45,32 @@ final class OrdersAction
         $page = $lastPage;
       }
 
-
       $orders = $os->getOrders($page, $sizePage);
     } catch (RessourceNotFoundException $e) {
       throw new HttpNotFoundException($rq, $e->getMessage());
     }
+
+
+
     $data = [
       'type' => 'collection',
       'count' => $countOrders,
       'size' => count($orders),
+      "links" => [],
       'orders' => $orders,
-      "links" => [
-        "next" => [
-          "href" => $routeParser->urlFor()
-        ],
-        "prev" => [
-          "href" => "/orders/?page=3"
-        ],
-        "last" => [
-          "href" => "/orders/?page=94"
-        ],
-        "first" => [
-          "href" => "/orders/?page=1"
-        ]
-      ],
     ];
+
+    if ($page + 1 <= $lastPage) {
+      $data['links']['next']['href'] = $routeParser->urlFor('orders', [], ['page' => $page + 1]);
+    }
+
+    if ($page - 1 >= 0) {
+      $data['links']['prev']['href'] = $routeParser->urlFor('orders', [], ['page' => $page - 1]);
+    }
+
+    $data['links']['last']['href'] = $routeParser->urlFor('orders', [], ['page' => $lastPage]);
+    $data['links']['first']['href'] = $routeParser->urlFor('orders', [], ['page' => 1]);
+
 
     return FormatterAPI::formatResponse($rq, $rs, $data);
   }
