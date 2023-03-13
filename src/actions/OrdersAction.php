@@ -25,10 +25,12 @@ final class OrdersAction
     $routeParser = RouteContext::fromRequest($rq)->getRouteParser();
 
     $page = 0;
+    $queryPage = 1;
     $sizePage = 10;
 
     if (isset($query['page']) && $query['page'] > 0) {
-      $page = $query['page'];
+      $queryPage = $query['page'];
+      $page = $query['page'] - 1;
     }
 
     // if (isset($query['size']) && $query['size'] > 0) {
@@ -58,21 +60,21 @@ final class OrdersAction
       'size' => count($orders),
       'links' => [
         'self' => [
-          'href' => $routeParser->urlFor('orders', [], ['page' => $page])
+          'href' => $routeParser->urlFor('orders', [], ['page' => $queryPage])
         ]
       ],
       'orders' => $orders,
     ];
 
     if ($page + 1 <= $lastPage) {
-      $data['links']['next']['href'] = $routeParser->urlFor('orders', [], ['page' => $page + 1]);
+      $data['links']['next']['href'] = $routeParser->urlFor('orders', [], ['page' => $queryPage + 1]);
     }
 
     if ($page - 1 >= 0) {
-      $data['links']['prev']['href'] = $routeParser->urlFor('orders', [], ['page' => $page - 1]);
+      $data['links']['prev']['href'] = $routeParser->urlFor('orders', [], ['page' => $queryPage - 1]);
     }
 
-    $data['links']['last']['href'] = $routeParser->urlFor('orders', [], ['page' => $lastPage]);
+    $data['links']['last']['href'] = $routeParser->urlFor('orders', [], ['page' => $lastPage + 1]);
     $data['links']['first']['href'] = $routeParser->urlFor('orders', [], ['page' => 1]);
 
 
