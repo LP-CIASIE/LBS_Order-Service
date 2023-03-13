@@ -18,17 +18,17 @@ final class UpdateOrderAction
   public function __invoke(Request $rq, Response $rs, array $args): Response
   {
     $body = $rq->getParsedBody();
-
     if (!isset($body)) {
       throw new BodyMissingException();
     }
 
     $os = new OrderServices();
 
+    $os->updateOrder($args['id'], $body);
 
     $data = [
-      'type' => 'resource',
-      'order' => 'TODO'
+      'type' => 'success',
+      'result' => 'ok'
     ];
 
     return FormatterAPI::formatResponse($rq, $rs, $data);
