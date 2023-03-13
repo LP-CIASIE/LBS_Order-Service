@@ -27,7 +27,10 @@ final class OrderItemsAction
     }
     $data = [
       'type' => 'collection',
-      'items' => $items
+      'items' => $items,
+      'links' => [
+        'commande' => "/orders/" . $args['id'],
+      ]
     ];
 
     return FormatterAPI::formatResponse($rq, $rs, $data);
