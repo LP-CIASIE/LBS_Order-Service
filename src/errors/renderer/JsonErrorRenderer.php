@@ -1,7 +1,7 @@
 <?php
 
 namespace lbs\order\errors\renderer;
-
+use Slim\Exception\HttpException;
 use Throwable;
 
 class JsonErrorRenderer extends \Slim\Error\Renderers\JsonErrorRenderer
