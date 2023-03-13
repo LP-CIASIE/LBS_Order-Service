@@ -20,7 +20,7 @@ final class OrderServices
     ])->get()->toArray();
   }
 
-  public function getOrderById($id): ?array
+  public function getOrderById($id, bool | string $embed = false): ?array
   {
     try {
       $order = models\Commande::select([
@@ -30,7 +30,22 @@ final class OrderServices
         'created_at as order_date',
         'livraison as delivery_date',
         'montant as total_amount'
-      ])->findOrFail($id);
+      ])->where('id', '=', $id);
+
+      if ($embed) {
+        switch ($embed) {
+          case 'items':
+            $order = $order->with('items');
+            break;
+
+          default:
+            # code...
+            break;
+        }
+      }
+
+
+      $order = $order->findOrFail($id);
     } catch (ModelNotFoundException $e) {
       throw new RessourceNotFoundException("Ressource non trouvée.");
     }

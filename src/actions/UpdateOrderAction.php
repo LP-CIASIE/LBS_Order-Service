@@ -12,28 +12,15 @@ use Slim\Exception\HttpNotFoundException;
 
 use \lbs\order\services\utils\FormatterAPI;
 
-final class OrderByIdAction
+final class UpdateOrderAction
 {
-  public function __invoke(
-    Request $rq,
-    Response $rs,
-    array $args
-  ): Response {
-    $query = $rq->getQueryParams();
+  public function __invoke(Request $rq, Response $rs, array $args): Response
+  {
     $os = new OrderServices();
-    try {
 
-      if (isset($query['embed'])) {
-        $order = $os->getOrderById($args['id'], $query['embed']);
-      } else {
-        $order = $os->getOrderById($args['id']);
-      }
-    } catch (RessourceNotFoundException $e) {
-      throw new HttpNotFoundException($rq, $e->getMessage());
-    }
     $data = [
       'type' => 'resource',
-      'order' => $order
+      'order' => 'TODO'
     ];
 
     return FormatterAPI::formatResponse($rq, $rs, $data);
