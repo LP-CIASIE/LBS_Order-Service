@@ -8,6 +8,8 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use lbs\order\errors\exceptions\RessourceNotFoundException;
 use Slim\Exception\HttpNotFoundException;
 
+use Slim\Routing\RouteContext;
+
 use lbs\order\services\OrderServices;
 use \lbs\order\services\utils\FormatterAPI;
 
@@ -20,6 +22,7 @@ final class OrdersAction
     $query = $rq->getQueryParams();
     $query = $rq->getQueryParams();
     $os = new OrderServices();
+    $routeParser = RouteContext::fromRequest($rq)->getRouteParser();
 
     $page = 0;
     $sizePage = 10;
@@ -51,7 +54,21 @@ final class OrdersAction
       'type' => 'collection',
       'count' => $countOrders,
       'size' => count($orders),
-      'orders' => $orders
+      'orders' => $orders,
+      "links" => [
+        "next" => [
+          "href" => $routeParser->urlFor()
+        ],
+        "prev" => [
+          "href" => "/orders/?page=3"
+        ],
+        "last" => [
+          "href" => "/orders/?page=94"
+        ],
+        "first" => [
+          "href" => "/orders/?page=1"
+        ]
+      ],
     ];
 
     return FormatterAPI::formatResponse($rq, $rs, $data);
