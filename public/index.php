@@ -37,5 +37,4 @@ $app->get('/orders/{id}[/]', lbs\order\actions\OrderByIdAction::class);
 $app->put('/orders/{id}[/]', lbs\order\actions\UpdateOrderAction::class);
 $app->get('/orders/{id}/items[/]', lbs\order\actions\OrderItemsAction::class);
 
-
 $app->run();

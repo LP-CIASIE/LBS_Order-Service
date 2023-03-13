@@ -6,6 +6,7 @@ use lbs\order\models;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use lbs\order\errors\exceptions\RessourceNotFoundException;
+use lbs\order\models\Commande;
 
 final class OrderServices
 {
@@ -43,8 +44,6 @@ final class OrderServices
             break;
         }
       }
-
-
       $order = $order->findOrFail($id);
     } catch (ModelNotFoundException $e) {
       throw new RessourceNotFoundException("Ressource non trouvée.");
@@ -61,6 +60,18 @@ final class OrderServices
     } catch (ModelNotFoundException $e) {
       throw new RessourceNotFoundException("Ressource non trouvée : " . $e);
     }
+
     return $items->toArray();
+  }
+
+  public function getOrdersByClient($c)
+  {
+    try{
+      $client_orders = Commande::select()->where('client_mail','=','$c')->get();
+    } catch (ModelNotFoundException $e){
+      throw new RessourceNotFoundException("Ressource non trouvée : " .$e);
+    }
+    
+    return $client_orders->toArray();
   }
 }
