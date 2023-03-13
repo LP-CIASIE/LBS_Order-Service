@@ -5,6 +5,7 @@ namespace lbs\order\services;
 use lbs\order\models;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\Events\ModelsPruned;
 use lbs\order\errors\exceptions\RessourceNotFoundException;
 
 final class OrderServices
@@ -41,8 +42,11 @@ final class OrderServices
   public function getItemsOrder($id)
   {
     try {
+      $order = models\Commande::select()->findOrFail($id);
+      $items = $order->items()->get();
     } catch (ModelNotFoundException $e) {
-      throw new RessourceNotFoundException("Ressource non trouvée.");
+      throw new RessourceNotFoundException("Ressource non trouvée : " . $e);
     }
+    return $items->toArray();
   }
 }

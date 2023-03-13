@@ -21,14 +21,13 @@ final class OrderItemsAction
   ): Response {
     $os = new OrderServices();
     try {
-      $order = $os->getItemsOrder($args['id']);
-      var_dump($args);
+      $items = $os->getItemsOrder($args['id']);
     } catch (RessourceNotFoundException $e) {
       throw new HttpNotFoundException($rq, $e->getMessage());
     }
     $data = [
-      'type' => 'resource',
-      'order' => $order
+      'type' => 'collection',
+      'items' => $items
     ];
 
     return FormatterAPI::formatResponse($rq, $rs, $data);
