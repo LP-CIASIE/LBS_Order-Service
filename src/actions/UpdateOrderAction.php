@@ -17,8 +17,8 @@ final class UpdateOrderAction
 {
   public function __invoke(Request $rq, Response $rs, array $args): Response
   {
-    $body = $rq->getParsedBody();
-    if (!isset($body)) {
+    $body = $rq->getParsedBody() ?? null;
+    if (is_null($body)) {
       throw new BodyMissingException();
     }
 

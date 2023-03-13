@@ -2,11 +2,9 @@
 
 namespace lbs\order\errors\renderer;
 
-use Throwable;
-
 class JsonErrorRenderer extends \Slim\Error\Renderers\JsonErrorRenderer
 {
-  public function __invoke(Throwable $exception, bool $displayErrorDetails): string
+  public function __invoke(\Throwable $exception, bool $displayErrorDetails): string
   {
     $data = [
       'type' => 'error',
