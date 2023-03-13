@@ -5,7 +5,6 @@ namespace lbs\order\services;
 use lbs\order\models;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Database\Events\ModelsPruned;
 use lbs\order\errors\exceptions\RessourceNotFoundException;
 
 final class OrderServices
