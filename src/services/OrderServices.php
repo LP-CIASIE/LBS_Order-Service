@@ -5,7 +5,12 @@ namespace lbs\order\services;
 use lbs\order\models;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use lbs\order\errors\exceptions\BodyErrorValidationException;
+use lbs\order\errors\exceptions\BodyMissingAttributesException;
 use lbs\order\errors\exceptions\RessourceNotFoundException;
+
+use Respect\Validation\Exceptions\NestedValidationException;
+use Respect\Validation\Validator as Validator;
 
 final class OrderServices
 {
@@ -53,14 +58,37 @@ final class OrderServices
     return $order->toArray();
   }
 
-  public function getItemsOrder($id)
+  public function updateOrder($id, $body): ?array
   {
     try {
       $order = models\Commande::findOrFail($id);
-      $items = $order->items()->get();
     } catch (ModelNotFoundException $e) {
-      throw new RessourceNotFoundException("Ressource non trouvée : " . $e);
+      throw new RessourceNotFoundException("Ressource non trouvée.");
     }
-    return $items->toArray();
+
+    if (!isset($body['client_name'], $body['client_mail'], $body['delivery_date'])) {
+      throw new BodyMissingAttributesException();
+    }
+
+    try {
+      Validator::key('client_name', Validator::stringType()->notEmpty())
+        ->key('client_mail', Validator::email())
+        ->key('delivery_date', Validator::dateTime('Y-m-d H:i:s'))
+        ->assert($body);
+    } catch (NestedValidationException $e) {
+      throw new BodyErrorValidationException();
+    }
+
+    $order->nom = $body['client_name'];
+    $order->mail = $body['client_mail'];
+    $order->livraison = $body['delivery_date'];
+
+    try {
+      $order->save();
+    } catch (\Exception $e) {
+      throw new \Exception("Erreur lors de la mise à jour de la commande.");
+    }
+
+    return $order->toArray();
   }
 }
