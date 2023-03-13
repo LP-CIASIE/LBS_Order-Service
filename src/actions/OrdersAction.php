@@ -56,7 +56,11 @@ final class OrdersAction
       'type' => 'collection',
       'count' => $countOrders,
       'size' => count($orders),
-      "links" => [],
+      'links' => [
+        'self' => [
+          'href' => $routeParser->urlFor('orders', [], ['page' => $page])
+        ]
+      ],
       'orders' => $orders,
     ];
 
