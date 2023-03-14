@@ -63,6 +63,14 @@ final class OrderServices
     return $order->toArray();
   }
 
+  public function newOrder($body): ?array
+  {
+
+
+
+    return [];
+  }
+
   public function updateOrder($id, $body): ?array
   {
     try {
