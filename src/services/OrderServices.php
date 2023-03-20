@@ -88,6 +88,10 @@ final class OrderServices
     $order->livraison = date('Y-m-d H:i:s', strtotime("{$body['delivery']['date']} {$body['delivery']['time']}"));
     $order->montant = 0;
 
+    foreach ($body['items'] as $key => $item) {
+      $order->montant = $order->montant + ($item['q'] * $item['price']);
+    }
+
     try {
       $order->save();
     } catch (\Exception $e) {
