@@ -24,13 +24,12 @@ final class UpdateOrderAction
 
     $os = new OrderServices();
 
-    $os->updateOrder($args['id'], $body);
+    try {
+      $os->updateOrder($args['id'], $body);
+    } catch (RessourceNotFoundException $e) {
+      throw new HttpNotFoundException($rq, $e->getMessage());
+    }
 
-    $data = [
-      'type' => 'success',
-      'result' => 'ok'
-    ];
-
-    return FormatterAPI::formatResponse($rq, $rs, $data);
+    return FormatterAPI::formatResponse($rq, $rs, null, 204);
   }
 }

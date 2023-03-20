@@ -12,6 +12,7 @@ use lbs\order\errors\exceptions\RessourceNotFoundException;
 use Slim\Exception\HttpNotFoundException;
 
 use \lbs\order\services\utils\FormatterAPI;
+use Slim\Routing\RouteContext;
 
 final class NewOrderAction
 {
@@ -30,13 +31,23 @@ final class NewOrderAction
       throw new HttpNotFoundException($rq, $e->getMessage());
     }
 
+    $routeParser = RouteContext::fromRequest($rq)->getRouteParser();
 
     $data = [
-      'type' => 'success',
-      'result' => 'ok',
-      'order' => $order
+      'type' => 'resource',
+      'order' => $order,
+      'links' => [
+        'items' => [
+          'href' => $routeParser->urlFor('ordersItems', ['id' => $order['id']])
+        ],
+        'self' => [
+          'href' => $routeParser->urlFor('ordersById', ['id' => $order['id']],)
+        ],
+      ]
     ];
 
-    return FormatterAPI::formatResponse($rq, $rs, $data);
+    $rs = $rs->withHeader('Location', $routeParser->urlFor('ordersById', ['id' => $order['id']]));
+
+    return FormatterAPI::formatResponse($rq, $rs, $data, 201);
   }
 }
