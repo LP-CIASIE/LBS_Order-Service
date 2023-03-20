@@ -46,6 +46,8 @@ final class NewOrderAction
       ]
     ];
 
+    $rs = $rs->withHeader('Location', $routeParser->urlFor('ordersById', ['id' => $order['id']]));
+
     return FormatterAPI::formatResponse($rq, $rs, $data, 201);
   }
 }
