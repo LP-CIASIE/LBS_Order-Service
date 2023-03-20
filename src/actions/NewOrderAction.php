@@ -13,7 +13,7 @@ use Slim\Exception\HttpNotFoundException;
 
 use \lbs\order\services\utils\FormatterAPI;
 
-final class UpdateOrderAction
+final class NewOrderAction
 {
   public function __invoke(Request $rq, Response $rs, array $args): Response
   {
@@ -24,11 +24,17 @@ final class UpdateOrderAction
 
     $os = new OrderServices();
 
-    $os->updateOrder($args['id'], $body);
+    try {
+      $order = $os->newOrder($body);
+    } catch (RessourceNotFoundException $e) {
+      throw new HttpNotFoundException($rq, $e->getMessage());
+    }
+
 
     $data = [
       'type' => 'success',
-      'result' => 'ok'
+      'result' => 'ok',
+      'order' => $order
     ];
 
     return FormatterAPI::formatResponse($rq, $rs, $data);

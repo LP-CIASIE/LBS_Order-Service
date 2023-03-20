@@ -10,6 +10,7 @@ use lbs\order\errors\exceptions\BodyMissingAttributesException;
 use lbs\order\errors\exceptions\RessourceNotFoundException;
 
 use Respect\Validation\Exceptions\NestedValidationException;
+use Illuminate\Support\Str;
 use Respect\Validation\Validator as Validator;
 
 final class OrderServices
@@ -38,7 +39,7 @@ final class OrderServices
         'mail as client_mail',
         'nom as client_name',
         'created_at as order_date',
-        'livraison as delivery_date',
+        'livraison as delivery',
         'montant as total_amount'
       ])->where('id', '=', $id);
 
@@ -65,10 +66,36 @@ final class OrderServices
 
   public function newOrder($body): ?array
   {
+    $order = new models\Commande;
 
+    if (!isset($body['client_name'], $body['client_mail'], $body['delivery'])) {
+      throw new BodyMissingAttributesException();
+    }
 
+    try {
+      Validator::key('client_name', Validator::stringType()->notEmpty())
+        ->key('client_mail', Validator::email())
+        ->key('delivery', Validator::key('date', Validator::Date('d-m-Y'))
+          ->key('time', Validator::Time('H:i')))
+        ->assert($body);
+    } catch (NestedValidationException $e) {
+      throw new BodyErrorValidationException();
+    }
 
-    return [];
+    $order->id = Str::uuid();
+    $order->nom = $body['client_name'];
+    $order->mail = $body['client_mail'];
+    $order->livraison = date('Y-m-d H:i:s', strtotime("{$body['delivery']['date']} {$body['delivery']['time']}"));
+    $order->montant = 0;
+
+    try {
+      $order->save();
+    } catch (\Exception $e) {
+      echo $e->getMessage();
+      throw new \Exception("Erreur lors de l'enregistrement de la commande.");
+    }
+
+    return $order->toArray();
   }
 
   public function updateOrder($id, $body): ?array
@@ -79,14 +106,15 @@ final class OrderServices
       throw new RessourceNotFoundException("Ressource non trouvée.");
     }
 
-    if (!isset($body['client_name'], $body['client_mail'], $body['delivery_date'])) {
+    if (!isset($body['client_name'], $body['client_mail'], $body['delivery'])) {
       throw new BodyMissingAttributesException();
     }
 
     try {
       Validator::key('client_name', Validator::stringType()->notEmpty())
         ->key('client_mail', Validator::email())
-        ->key('delivery_date', Validator::dateTime('Y-m-d H:i:s'))
+        ->key('delivery', Validator::key('date', Validator::Date('d-m-Y'))
+          ->key('time', Validator::Time('H:i')))
         ->assert($body);
     } catch (NestedValidationException $e) {
       throw new BodyErrorValidationException();
@@ -94,7 +122,7 @@ final class OrderServices
 
     $order->nom = $body['client_name'];
     $order->mail = $body['client_mail'];
-    $order->livraison = $body['delivery_date'];
+    $order->livraison = date('Y-m-d H:i:s', strtotime("{$body['delivery']['date']} {$body['delivery']['time']}"));
 
     try {
       $order->save();
