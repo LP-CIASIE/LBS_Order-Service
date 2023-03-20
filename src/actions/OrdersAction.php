@@ -78,6 +78,6 @@ final class OrdersAction
     $data['links']['first']['href'] = $routeParser->urlFor('orders', [], ['page' => 1]);
 
 
-    return FormatterAPI::formatResponse($rq, $rs, $data);
+    return FormatterAPI::formatResponse($rq, $rs, $data, 200);
   }
 }

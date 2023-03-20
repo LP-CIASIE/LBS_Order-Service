@@ -44,6 +44,6 @@ final class OrderItemsAction
       ]
     ];
 
-    return FormatterAPI::formatResponse($rq, $rs, $data);
+    return FormatterAPI::formatResponse($rq, $rs, $data, 200);
   }
 }

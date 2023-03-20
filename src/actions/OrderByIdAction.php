@@ -48,6 +48,6 @@ final class OrderByIdAction
       ]
     ];
 
-    return FormatterAPI::formatResponse($rq, $rs, $data);
+    return FormatterAPI::formatResponse($rq, $rs, $data, 200);
   }
 }
