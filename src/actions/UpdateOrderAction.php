@@ -31,6 +31,6 @@ final class UpdateOrderAction
       'result' => 'ok'
     ];
 
-    return FormatterAPI::formatResponse($rq, $rs, $data);
+    return FormatterAPI::formatResponse($rq, $rs, null, 204);
   }
 }
