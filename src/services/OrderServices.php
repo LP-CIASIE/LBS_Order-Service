@@ -78,6 +78,10 @@ final class OrderServices
         ->key('client_mail', Validator::email())
         ->key('delivery', Validator::key('date', Validator::Date('d-m-Y'))
           ->key('time', Validator::Time('H:i')))
+        ->key('items', Validator::each(Validator::key('uri', Validator::stringType()->notEmpty()->noWhitespace())
+          ->key('name', Validator::stringType()->notEmpty())
+          ->key('price', Validator::numericVal())
+          ->key('q', Validator::intType()->min(1))))
         ->assert($body);
     } catch (NestedValidationException $e) {
       throw new BodyErrorValidationException();
@@ -92,6 +96,7 @@ final class OrderServices
     try {
 
       foreach ($body['items'] as $key => $rq_item) {
+
         $order->montant += ($rq_item['q'] * $rq_item['price']);
 
         $item = new Item();
