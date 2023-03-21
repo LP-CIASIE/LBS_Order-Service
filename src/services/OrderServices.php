@@ -11,6 +11,7 @@ use lbs\order\errors\exceptions\RessourceNotFoundException;
 
 use Respect\Validation\Exceptions\NestedValidationException;
 use Illuminate\Support\Str;
+use lbs\order\models\Item;
 use Respect\Validation\Validator as Validator;
 
 final class OrderServices
@@ -88,11 +89,20 @@ final class OrderServices
     $order->livraison = date('Y-m-d H:i:s', strtotime("{$body['delivery']['date']} {$body['delivery']['time']}"));
     $order->montant = 0;
 
-    foreach ($body['items'] as $key => $item) {
-      $order->montant = $order->montant + ($item['q'] * $item['price']);
-    }
-
     try {
+
+      foreach ($body['items'] as $key => $rq_item) {
+        $order->montant += ($rq_item['q'] * $rq_item['price']);
+
+        $item = new Item();
+        $item->uri = $rq_item['uri'];
+        $item->libelle = $rq_item['name'];
+        $item->tarif = $rq_item['price'];
+        $item->quantite = $rq_item['q'];
+
+        $order->items()->save($item);
+      }
+
       $order->save();
     } catch (\Exception $e) {
       echo $e->getMessage();
