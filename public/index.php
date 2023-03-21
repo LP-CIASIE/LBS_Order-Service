@@ -17,11 +17,17 @@ $capsule->addConnection($conf);
 $capsule->setAsGlobal();
 $capsule->bootEloquent();
 
-$app = AppFactory::create();
+$builder = new DI\ContainerBuilder();
+$builder->addDefinitions(dirname(__DIR__, 1) . '/src/conf/settings.php');
+$builder->addDefinitions(dirname(__DIR__, 1) . '/src/conf/services.php');
+$container = $builder->build();
+
+$app = AppFactory::createFromContainer($container);
+
 $app->addBodyParsingMiddleware();
 $app->addRoutingMiddleware();
 
-$errorMiddleware = $app->addErrorMiddleware(false, false, false);
+$errorMiddleware = $app->addErrorMiddleware($container->get('displayErrorDetails'), $container->get('logErrors'), $container->get('logErrorDetails'));
 $errorMiddleware->getDefaultErrorHandler()->forceContentType('application/json'); // Temporary to force JSON on browser
 
 $errorMiddleware->getDefaultErrorHandler()->registerErrorRenderer('application/json', lbs\order\errors\renderer\JsonErrorRenderer::class);

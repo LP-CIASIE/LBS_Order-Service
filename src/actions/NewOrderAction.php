@@ -14,7 +14,7 @@ use Slim\Exception\HttpNotFoundException;
 use \lbs\order\services\utils\FormatterAPI;
 use Slim\Routing\RouteContext;
 
-final class NewOrderAction
+final class NewOrderAction extends AbstractAction
 {
   public function __invoke(Request $rq, Response $rs, array $args): Response
   {
