@@ -96,7 +96,6 @@ final class OrderServices
     try {
 
       foreach ($body['items'] as $key => $rq_item) {
-
         $order->montant += ($rq_item['q'] * $rq_item['price']);
 
         $item = new Item();
