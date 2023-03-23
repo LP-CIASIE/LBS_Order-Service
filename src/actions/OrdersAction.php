@@ -13,7 +13,7 @@ use Slim\Routing\RouteContext;
 use lbs\order\services\OrderServices;
 use \lbs\order\services\utils\FormatterAPI;
 
-final class OrdersAction
+final class OrdersAction extends AbstractAction
 {
   public function __invoke(
     Request $rq,

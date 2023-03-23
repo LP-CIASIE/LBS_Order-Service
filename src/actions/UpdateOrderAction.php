@@ -13,7 +13,7 @@ use Slim\Exception\HttpNotFoundException;
 
 use \lbs\order\services\utils\FormatterAPI;
 
-final class UpdateOrderAction
+final class UpdateOrderAction extends AbstractAction
 {
   public function __invoke(Request $rq, Response $rs, array $args): Response
   {
