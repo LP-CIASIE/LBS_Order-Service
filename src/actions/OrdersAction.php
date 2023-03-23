@@ -78,15 +78,11 @@ final class OrdersAction
 
     $data['links']['last']['href'] = $routeParser->urlFor('orders', [], ['page' => $lastPage + 1]);
     $data['links']['first']['href'] = $routeParser->urlFor('orders', [], ['page' => 1]);
-
-
-    if(isset($query['c'])){
-    }
-
+    
     // if (isset($query['size']) && $query['size'] > 0) {
     //   $sizePage = $query['size'];
     // }
 
-    return FormatterAPI::formatResponse($rq, $rs, $data);
+    return FormatterAPI::formatResponse($rq, $rs, $data, 200);
   }
 }

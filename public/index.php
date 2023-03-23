@@ -36,5 +36,6 @@ $app->get('/orders[/]', lbs\order\actions\OrdersAction::class)->setName('orders'
 $app->get('/orders/{id}[/]', lbs\order\actions\OrderByIdAction::class)->setName('ordersById');
 $app->put('/orders/{id}[/]', lbs\order\actions\UpdateOrderAction::class)->setName('updateOrder');
 $app->get('/orders/{id}/items[/]', lbs\order\actions\OrderItemsAction::class)->setName('ordersItems');
+$app->post('/orders[/]', lbs\order\actions\NewOrderAction::class)->setName('newOrder');
 
 $app->run();
