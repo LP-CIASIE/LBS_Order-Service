@@ -19,40 +19,42 @@ final class OrdersAction extends AbstractAction
     Request $rq,
     Response $rs
   ): Response {
-    $query = $rq->getQueryParams();
+
     $query = $rq->getQueryParams();
     $os = $this->container->get('order.service');
     $routeParser = RouteContext::fromRequest($rq)->getRouteParser();
-
+    
     $page = 0;
     $queryPage = 1;
     $sizePage = 10;
+    $c = '';
+    $sort = '';
 
     if (isset($query['page']) && $query['page'] > 0) {
       $queryPage = $query['page'];
       $page = $query['page'] - 1;
     }
 
-    // if (isset($query['size']) && $query['size'] > 0) {
-    //   $sizePage = $query['size'];
-    // }
+    if (isset($query['c']) && is_string($query['c']) && !empty($query['c'])) {
+      $c = $query['c'];
+    }
+
+    if (isset($query['sort']) && is_string($query['sort']) && !empty($query['sort'])) {
+      $sort = $query['sort'];
+    }
 
     try {
-
-      $countOrders = $os->getCountOrders();
-
+      $countOrders = $os->getCountOrders($c);
       $lastPage = ceil($countOrders / $sizePage) - 1;
 
       if ($page > $lastPage) {
         $page = $lastPage;
       }
 
-      $orders = $os->getOrders($page, $sizePage);
+      $orders = $os->getOrders($page, $sizePage, $c, $sort);
     } catch (RessourceNotFoundException $e) {
       throw new HttpNotFoundException($rq, $e->getMessage());
     }
-
-
 
     $data = [
       'type' => 'collection',
@@ -76,7 +78,10 @@ final class OrdersAction extends AbstractAction
 
     $data['links']['last']['href'] = $routeParser->urlFor('orders', [], ['page' => $lastPage + 1]);
     $data['links']['first']['href'] = $routeParser->urlFor('orders', [], ['page' => 1]);
-
+    
+    // if (isset($query['size']) && $query['size'] > 0) {
+    //   $sizePage = $query['size'];
+    // }
 
     return FormatterAPI::formatResponse($rq, $rs, $data, 200);
   }

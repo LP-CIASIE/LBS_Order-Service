@@ -23,7 +23,6 @@ final class OrderByIdAction extends AbstractAction
     $query = $rq->getQueryParams();
     $os = $this->container->get('order.service');
     try {
-
       if (isset($query['embed'])) {
         $order = $os->getOrderById($args['id'], $query['embed']);
       } else {

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use lbs\order\errors\exceptions\BodyErrorValidationException;
 use lbs\order\errors\exceptions\BodyMissingAttributesException;
 use lbs\order\errors\exceptions\RessourceNotFoundException;
+use lbs\order\models\Commande;
 
 use Respect\Validation\Exceptions\NestedValidationException;
 use Illuminate\Support\Str;
@@ -25,19 +26,50 @@ final class OrderServices
   //   $this->logger = $logger;
   // }
 
-  public function getOrders(int $page = 0, int $sizePage = 10): array
+  // protected ContainerInterface $logger;
+
+  // public function __construct(ContainerInterface $logger)
+  // {
+  //   $this->logger = $logger;
+  // }
+
+  public function getOrders(int $page, int $sizePage, string $c, string $sort): array
   {
-    return models\Commande::select([
+    $query = models\Commande::select([
       'id',
       'mail as client_mail',
       'created_at as order_date',
       'montant as total_amount'
-    ])->offset($page * $sizePage)->limit($sizePage)->get()->toArray();
+    ]);
+    if (isset($c) && !empty($c)) {
+      $query = $query->where('mail', '=', $c);
+    }
+
+    $query = $query->offset($page * $sizePage)->limit($sizePage);
+
+    if (isset($sort) && !empty($sort)) {
+      switch ($sort) {
+        case 'date':
+          $query = $query->orderBy('created_at', 'desc');
+          break;
+        case 'amount':
+          $query = $query->orderBy('montant', 'desc');
+          break;
+      }
+    }
+
+    return $query->offset($page * $sizePage)->limit($sizePage)->get()->toArray();
   }
 
-  public function getCountOrders(): int
+  public function getCountOrders($c): int
   {
-    return models\Commande::count();
+    $query = models\Commande::select();
+
+    if (isset($c) && !empty($c)) {
+      $query = $query->where('mail', '=', $c);
+    }
+
+    return $query->count();
   }
 
   public function getOrderById($id, bool | string $embed = false): ?array
@@ -63,8 +95,6 @@ final class OrderServices
             break;
         }
       }
-
-
       $order = $order->findOrFail($id);
     } catch (ModelNotFoundException $e) {
       throw new RessourceNotFoundException("Ressource non trouvée.");
@@ -167,6 +197,18 @@ final class OrderServices
     } catch (ModelNotFoundException $e) {
       throw new RessourceNotFoundException("Ressource non trouvée : " . $e);
     }
+
     return $items->toArray();
+  }
+
+  public function getOrdersByClient($c)
+  {
+    try {
+      $client_orders = Commande::select()->where('client_mail', '=', $c);
+    } catch (ModelNotFoundException $e) {
+      throw new RessourceNotFoundException("Ressource non trouvée : " . $e);
+    }
+
+    return $client_orders->toArray();
   }
 }
