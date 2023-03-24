@@ -22,7 +22,7 @@ final class OrderItemsAction extends AbstractAction
     Response $rs,
     array $args
   ): Response {
-    $os = new OrderServices();
+    $os = $this->container->get('order.service');
 
     $routeParser = RouteContext::fromRequest($rq)->getRouteParser();
 

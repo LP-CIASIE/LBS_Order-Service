@@ -23,7 +23,7 @@ final class NewOrderAction extends AbstractAction
       throw new BodyMissingException();
     }
 
-    $os = new OrderServices();
+    $os = $this->container->get('order.service');
 
     try {
       $order = $os->newOrder($body);

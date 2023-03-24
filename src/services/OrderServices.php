@@ -12,10 +12,18 @@ use lbs\order\errors\exceptions\RessourceNotFoundException;
 use Respect\Validation\Exceptions\NestedValidationException;
 use Illuminate\Support\Str;
 use lbs\order\models\Item;
+use Psr\Container\ContainerInterface;
 use Respect\Validation\Validator as Validator;
 
 final class OrderServices
 {
+
+  // protected ContainerInterface $logger;
+
+  // public function __construct(ContainerInterface $logger)
+  // {
+  //   $this->logger = $logger;
+  // }
 
   public function getOrders(int $page = 0, int $sizePage = 10): array
   {
