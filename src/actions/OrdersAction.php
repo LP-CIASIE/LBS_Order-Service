@@ -21,7 +21,7 @@ final class OrdersAction extends AbstractAction
   ): Response {
 
     $query = $rq->getQueryParams();
-    $os = new OrderServices();
+    $os = $this->container->get('order.service');
     $routeParser = RouteContext::fromRequest($rq)->getRouteParser();
     
     $page = 0;

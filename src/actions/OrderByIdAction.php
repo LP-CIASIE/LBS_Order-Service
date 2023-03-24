@@ -21,7 +21,7 @@ final class OrderByIdAction extends AbstractAction
     array $args
   ): Response {
     $query = $rq->getQueryParams();
-    $os = new OrderServices();
+    $os = $this->container->get('order.service');
     try {
       if (isset($query['embed'])) {
         $order = $os->getOrderById($args['id'], $query['embed']);

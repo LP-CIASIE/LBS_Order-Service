@@ -21,8 +21,7 @@ final class UpdateOrderAction extends AbstractAction
     if (is_null($body)) {
       throw new BodyMissingException();
     }
-
-    $os = new OrderServices();
+    $os = $this->container->get('order.service');
 
     try {
       $os->updateOrder($args['id'], $body);

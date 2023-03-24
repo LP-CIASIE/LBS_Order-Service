@@ -13,10 +13,25 @@ use lbs\order\models\Commande;
 use Respect\Validation\Exceptions\NestedValidationException;
 use Illuminate\Support\Str;
 use lbs\order\models\Item;
+use Psr\Container\ContainerInterface;
 use Respect\Validation\Validator as Validator;
 
 final class OrderServices
 {
+
+  // protected ContainerInterface $logger;
+
+  // public function __construct(ContainerInterface $logger)
+  // {
+  //   $this->logger = $logger;
+  // }
+
+  // protected ContainerInterface $logger;
+
+  // public function __construct(ContainerInterface $logger)
+  // {
+  //   $this->logger = $logger;
+  // }
 
   public function getOrders(int $page, int $sizePage, string $c, string $sort): array
   {
@@ -26,13 +41,13 @@ final class OrderServices
       'created_at as order_date',
       'montant as total_amount'
     ]);
-    if(isset($c) && !empty($c)){
+    if (isset($c) && !empty($c)) {
       $query = $query->where('mail', '=', $c);
     }
 
     $query = $query->offset($page * $sizePage)->limit($sizePage);
 
-    if(isset($sort) && !empty($sort)){
+    if (isset($sort) && !empty($sort)) {
       switch ($sort) {
         case 'date':
           $query = $query->orderBy('created_at', 'desc');
@@ -50,7 +65,7 @@ final class OrderServices
   {
     $query = models\Commande::select();
 
-    if(isset($c) && !empty($c)){
+    if (isset($c) && !empty($c)) {
       $query = $query->where('mail', '=', $c);
     }
 
@@ -188,12 +203,12 @@ final class OrderServices
 
   public function getOrdersByClient($c)
   {
-    try{
-      $client_orders = Commande::select()->where('client_mail','=', $c);
-    } catch (ModelNotFoundException $e){
-      throw new RessourceNotFoundException("Ressource non trouvée : " .$e);
+    try {
+      $client_orders = Commande::select()->where('client_mail', '=', $c);
+    } catch (ModelNotFoundException $e) {
+      throw new RessourceNotFoundException("Ressource non trouvée : " . $e);
     }
-    
+
     return $client_orders->toArray();
   }
 }
